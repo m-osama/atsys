@@ -43,16 +43,14 @@
     <thead>
     <tr>
         <th>Location</th>
-        <th>Checkins</th>
-        <th>Covering</th>
+        <th>People</th>
     </tr>
     </thead>
     <tbody>
-    <?php foreach ( get_location_coverage() as $location_id => $location ): ?>
+    <?php foreach ( get_location_coverage() as $location_id => $location ): if ( ! count( $location['covering'] ) ) continue; ?>
     <tr>
         <td><?php echo $location['location']->name ?></td>
-        <td><?php echo count( $location['members'] ) ?></td>
-        <td><?php echo count( $location['covering'] ) ?></td>
+        <td><?php echo implode( ', ', wp_list_pluck( $location['covering'], 'display_name' ) ) ?></td>
     </tr>
     <?php endforeach ?>
     </tbody>
