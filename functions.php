@@ -63,7 +63,10 @@ add_action( 'fm_user', function () {
 			'company_id' => new Fieldmanager_TextField( 'Company ID' ),
 		],
 	] );
-	$fm->add_user_form( 'Employee Information' );
+
+	if ( current_user_can( 'manage_options' ) ) {
+		$fm->add_user_form( 'Employee Information' );
+	}
 } );
 
 function get_user_current_checkin() {
