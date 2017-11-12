@@ -51,9 +51,9 @@ add_action( 'fm_user', function () {
 		'children' => [
 			'position'     => new Fieldmanager_Select( 'Position', [
 				'options' => [
-					'manager' => 'Manager',
+					'member' => 'Team Member',
 					'lead' => 'Team Lead',
-					'member' => 'Team Member'
+					'manager' => 'Manager',
 				],
 			] ),
 			'lead' => new Fieldmanager_Select( 'Lead', [
