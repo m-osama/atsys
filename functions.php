@@ -173,20 +173,14 @@ add_filter( 'map_meta_cap', function( $caps, $cap, $user_id, $args ) {
 	$position = get_user_meta( $user_id, 'position', true );
 
 	if ( user_can( $user_id, 'manage_options' ) ) {
-		$caps[] = 'exist';
-	}
-
-	// Managers can see it all
-	if ( 'manager' === $position ) {
-		$caps[] = 'exist';
-	}
-
-	// Leads only see their team's
-	if ( 'lead' === $position ) {
+		$caps = [ 'exist' ];
+	} elseif ( 'manager' === $position ) { // Managers can see it all
+		$caps = [ 'exist' ];
+	} elseif ( 'lead' === $position ) { // Leads only see their team's
 		$employee = $args[0];
 		$lead = get_user_meta( $employee, 'lead', true );
 		if ( $user_id == $lead ) {
-			$caps[] = 'exist';
+			$caps = [ 'exist' ];
 		}
 	}
 
