@@ -72,7 +72,7 @@ function get_user_current_checkin() {
 
 	$posts = get_posts([
 		'post_type' => 'checkin',
-		'post_author' => $user_id,
+		'author' => intval( $user_id ),
 		'date_query' => [
 			[
 				'year'  => $today['year'],
@@ -106,22 +106,21 @@ function handle_post_submission() {
 		if ( $action === 'Check out' ) {
 			update_post_meta( $checkin->ID, 'checkout', time() );
 		} else {
-			wp_die( 'hanestahbel ?!' );
+			wp_die( 'Invalid operation.' );
 		}
 	} elseif ( $action === 'Check in' ) {
 		$location = filter_input( INPUT_POST, 'location', FILTER_SANITIZE_NUMBER_INT );
-		wp_insert_post( [
+		$post_id = wp_insert_post( [
 			'post_type' => 'checkin',
 			'post_status' => 'publish',
-			'post_author' => get_current_user_id(),
 			'meta_input' => [
 				'checkin' => time(),
 				'checkout' => '',
 			],
-			'tax_input' => [
-				'location' => [ $location ],
-			],
 		] );
+		if ( $post_id && ! is_wp_error( $post_id ) ) {
+			wp_set_post_terms( $post_id, $location, 'location' );
+		}
 	}
 }
 
