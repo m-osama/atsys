@@ -36,7 +36,7 @@ add_action( 'fm_post_checkin', function () {
 				] ),
 			] ),
 			'gps'      => new Fieldmanager_Textfield( 'GPS' ),
-			'checkin'  => new Fieldmanager_Datepicker( 'Check-in time', [ 'use_time' => true, 'default_value' => time() ] ),
+			'checkin'  => new Fieldmanager_Datepicker( 'Check-in time', [ 'use_time' => true, 'default_value' => current_time( 'timestamp' ) ] ),
 			'checkout' => new Fieldmanager_Datepicker( 'Check-out time', [ 'use_time' => true ] ),
 		],
 	] );
