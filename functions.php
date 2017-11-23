@@ -268,3 +268,15 @@ function get_location_coverage() {
 
 	return $coverage;
 }
+
+
+/**
+ * Go to homepage after logging out, so we don't trigger the login flow again
+ */
+add_filter( 'login_redirect', function( $url ) {
+	if ( ! current_user_can( 'manage_options' ) ) {
+		return home_url();
+	}
+
+	return $url;
+} );
