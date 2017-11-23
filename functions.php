@@ -107,7 +107,7 @@ function handle_post_submission() {
 
 	if ( $checkin = get_user_current_checkin() ) {
 		if ( $action === 'Check out' ) {
-			update_post_meta( $checkin->ID, 'checkout', time() );
+			update_post_meta( $checkin->ID, 'checkout', current_time( 'timestamp' ) );
 		} else {
 			wp_die( 'Invalid operation.' );
 		}
