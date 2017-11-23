@@ -117,7 +117,7 @@ function handle_post_submission() {
 			'post_type' => 'checkin',
 			'post_status' => 'publish',
 			'meta_input' => [
-				'checkin' => time(),
+				'checkin' => current_time( 'timestamp' ),
 				'checkout' => '',
 			],
 		] );
