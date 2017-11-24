@@ -111,8 +111,12 @@ function handle_post_submission() {
 		} else {
 			wp_die( 'Invalid operation.' );
 		}
-	} elseif ( $action === 'Check in' ) {
+	} else {
 		$location = filter_input( INPUT_POST, 'location', FILTER_SANITIZE_NUMBER_INT );
+		$gps = explode( ',', $_POST['gps'] ?? '' );
+		if ( empty( $gps ) || 2 !== count( $gps ) ) {
+			wp_die( 'لا يمكنك تسجيل الدخول بدون السماح للموقع بمعرفة مكانك.' );
+		}
 		$post_id = wp_insert_post( [
 			'post_type' => 'checkin',
 			'post_status' => 'publish',
@@ -123,6 +127,7 @@ function handle_post_submission() {
 		] );
 		if ( $post_id && ! is_wp_error( $post_id ) ) {
 			wp_set_post_terms( $post_id, $location, 'location' );
+			update_post_meta( $post_id, 'gps', implode( ',', $gps ) );
 		}
 	}
 }

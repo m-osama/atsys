@@ -14,8 +14,10 @@
 			'taxonomy'     => 'location',
 			'hide_empty'   => false,
 		] ); ?>
+        <script src="<?php echo get_template_directory_uri(); ?>/assets/checkin.js"></script>
+        <input type="hidden" name="gps" id="gps">
 
-        <input type="submit" name="action" value="Check in">
+        <input type="submit" id="checkin" name="action" value="Check in" disabled>
 	<?php endif; ?>
 </form>
 
