@@ -128,6 +128,10 @@ function handle_post_submission() {
 		if ( $post_id && ! is_wp_error( $post_id ) ) {
 			wp_set_post_terms( $post_id, $location, 'location' );
 			update_post_meta( $post_id, 'gps', implode( ',', $gps ) );
+
+			if ( ! in_array( $location, get_user_meta( get_current_user_id(), 'locations' ) ) ) {
+				add_user_meta( get_current_user_id(), 'locations', $location );
+			}
 		}
 	}
 }
@@ -285,3 +289,28 @@ add_filter( 'login_redirect', function( $url ) {
 
 	return $url;
 } );
+
+function filter_get_terms_prioritize_user_locations( $terms, $taxonomy ) {
+	if ( ( ! did_action( 'user_checkin_form' ) || did_action( 'end_user_checkin_form' ) ) ||  is_admin() || ! in_array( 'location', $taxonomy, true ) || ! is_user_logged_in() ) {
+		return $terms;
+	}
+
+	$user_terms = get_user_meta( get_current_user_id(), 'locations' );
+	$frequent = array_filter( $terms, function( $term ) use ( $user_terms ) {
+		if ( in_array( $term->term_id, $user_terms ) ) {
+			$term->parent = 0;
+			$term->name = '> ' . $term->name;
+			return true;
+		}
+		return false;
+	});
+
+	$terms = call_user_func_array( 'array_merge', [
+		$frequent,
+		array_udiff( $terms, $frequent, function( $a, $b ) { return $a->term_id === $b->term_id ? 0 : -1; } ),
+	] );
+
+    return $terms;
+}
+
+add_filter( 'get_terms', __NAMESPACE__ . '\\filter_get_terms_prioritize_user_locations', 10, 2 );
